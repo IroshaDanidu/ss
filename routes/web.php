@@ -143,3 +143,9 @@ Route::get('orders', 'App\Http\Controllers\OrderController@index');
     Route::get('thanku', function () {
         return view('checkout');
     });
+
+
+
+Route::patch('/cart/{id}', [CartController::class, 'update'])->name('cart.update');
+Route::delete('/cart/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
+

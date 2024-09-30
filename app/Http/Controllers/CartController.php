@@ -10,7 +10,6 @@ use App\Models\Cart;
 //auth
 use Illuminate\Support\Facades\Auth;
 
-
 class CartController extends Controller
 {
     public function updateQuantity(Request $request, $id)
@@ -91,6 +90,22 @@ class CartController extends Controller
         return response()->json(['count'=>$cartcount]);
     }
 
+    public function update(Request $request, $id)
+    {
+        $cartItem = Cart::findOrFail($id);
+        $cartItem->quantity = $request->input('quantity');
+        $cartItem->save();
+        return redirect()->back()->with('success', 'Cart updated successfully!');
+
+    }
+
+    public function destroy($id)
+    {
+        $cartItem = Cart::findOrFail($id);
+        $cartItem->delete();
+        return redirect()->back()->with('success', 'Item removed from cart!');
+
+    }
 
 
     public function showw()

@@ -10,28 +10,43 @@
         <div class="overflow-x-auto">
             <table class="min-w-full table-auto">
                 <thead>
-                    <tr class="bg-gray-200">
-                        <th class="px-4 py-2 text-left">Product</th>
-                        <th class="px-4 py-2 text-left">Quantity</th>
-                        <th class="px-4 py-2 text-left">Price</th>
-                        <th class="px-4 py-2 text-left">Total</th>
-                    </tr>
+                <tr class="bg-gray-200">
+                    <th class="px-4 py-2 text-left">Product</th>
+                    <th class="px-4 py-2 text-left">Quantity</th>
+                    <th class="px-4 py-2 text-left">Price</th>
+                    <th class="px-4 py-2 text-left">Total</th>
+                    <th class="px-4 py-2 text-left">Actions</th>
+                </tr>
                 </thead>
                 <tbody>
+                @php
+                    $total = 0;
+                @endphp
+                @foreach($Carts as $item)
+                    <tr class="border-b border-gray-200">
+                        <td class="px-4 py-2">{{ $item->product->name }}</td>
+                        <td class="px-4 py-2">
+                            <form action="{{ route('cart.update', $item->id) }}" method="POST">
+                                @csrf
+                                @method('PATCH')
+                                <input type="number" name="quantity" value="{{ $item->quantity }}" min="1" class="w-16 text-center">
+                                <button type="submit" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-2 rounded">Update</button>
+                            </form>
+                        </td>
+                        <td class="px-4 py-2">Rs. {{ $item->product->price }}</td>
+                        <td class="px-4 py-2">Rs. {{ $item->product->price * $item->quantity }}</td>
+                        <td class="px-4 py-2">
+                            <form action="{{ route('cart.destroy', $item->id) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
                     @php
-                        $total = 0;
+                        $total += $item->product->price * $item->quantity;
                     @endphp
-                    @foreach($Carts as $item)
-                        <tr class="border-b border-gray-200">
-                            <td class="px-4 py-2">{{ $item->product->name }}</td>
-                            <td class="px-4 py-2">{{ $item->quantity }}</td>
-                            <td class="px-4 py-2">Rs. {{ $item->product->price }}</td>
-                            <td class="px-4 py-2">Rs. {{ $item->product->price * $item->quantity }}</td>
-                        </tr>
-                        @php
-                            $total += $item->product->price * $item->quantity;
-                        @endphp
-                    @endforeach
+                @endforeach
                 </tbody>
             </table>
         </div>
